@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 
 from telegram import Update
 from telegram.ext import ApplicationBuilder, ContextTypes, CommandHandler
-from src import news, team_data
+from src.scouts import news, team_data
 
 
 async def send_news(update: Update, context: ContextTypes.DEFAULT_TYPE):
