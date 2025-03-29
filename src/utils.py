@@ -18,7 +18,7 @@ def __parse_html(html):
     return soup
 
 
-def get_content(url):
+def get_soup(url):
     return __parse_html(__get_html(url))
 
 

@@ -1,7 +1,7 @@
 import os
 import logging
 from dotenv import load_dotenv
-from src.utils import get_content
+from src.utils import get_soup
 
 
 def run() -> list:
@@ -10,7 +10,7 @@ def run() -> list:
     logging.basicConfig(format=FORMAT, level=logging.INFO)
     load_dotenv()
     url = os.getenv("URL_NEWS")
-    soup = get_content(url)
+    soup = get_soup(url)
     contents = list()
 
     newsList = soup.select("div[class='d3-l-col__col-4']")

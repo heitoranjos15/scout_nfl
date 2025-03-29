@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 
 from telegram import Update
 from telegram.ext import ApplicationBuilder, ContextTypes, CommandHandler
-from src.scouts import news, team_data
+from src.scouts import news, teams
 
 
 async def send_news(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -29,7 +29,7 @@ async def select_team(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def get_team_data(update: Update, context: ContextTypes.DEFAULT_TYPE):
     team = update.message.text
-    content = team_data.run_by_team(team)
+    content = teams.run_by_team(team)
     text = f'Coach: {content.get("info").get("coach")}\n'
     for game in content.get("games"):
         text += f'{game.get("date")} {game.get("hour")} {game.get("home_game")} {game.get("opponent")}\n'
@@ -42,7 +42,7 @@ async def get_team_data(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 def test():
     print("new", news.run())
-    print("team", team_data.run_by_team("buffalo-bills"))
+    print("team", teams.run_by_team("buffalo-bills"))
 
 
 def main():
