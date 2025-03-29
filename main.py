@@ -8,7 +8,6 @@ from src import news, team_data
 
 
 async def send_news(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    print("send_news")
     content_list = news.run()
 
     for content in content_list:

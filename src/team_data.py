@@ -1,3 +1,6 @@
+import os
+import logging
+from dotenv import load_dotenv
 from src.utils import get_content, team_keys
 
 
@@ -7,6 +10,7 @@ def get_games(soup):
     for game in gamesList:
         colums = game.select("td")
         if len(colums) == 0:
+            logging.info("No columns found")
             continue
         date = colums[1].text.strip()
         hour = colums[2].text.strip()
@@ -26,6 +30,7 @@ def get_games(soup):
 def get_info(soup) -> dict:
     infoList = soup.select("div#meta > div:nth-of-type(2) > p")
     if len(infoList) == 0:
+        logging.info("No info found")
         return {
             "coach": "",
             "off_cor": "",
@@ -45,6 +50,10 @@ def get_info(soup) -> dict:
 def get_transactions(soup) -> list:
     content = list()
     transactionList = soup.select("div.stacktable > div.tr")
+    if len(transactionList) == 0:
+        logging.info("No transactions found")
+        return content
+
     for transaction in transactionList:
         transaction_data = transaction.select("div")
         date = transaction_data[0].text.strip()
@@ -57,18 +66,25 @@ def get_transactions(soup) -> list:
 
 
 def run_by_team(team, team_key=None) -> dict:
+    scope = "nfl_team_data"
+    FORMAT = f'%(asctime)-15s [{scope}] - {team} %(message)s'
+    logging.basicConfig(format=FORMAT, level=logging.INFO)
+    load_dotenv()
+
     if not team_key:
         team_key = team_keys.get(team)
         if not team_key:
             raise Exception("Team not found")
 
-    stats_team_url = f"https://www.pro-football-reference.com/teams/{team_key}/2024.htm"
+    url_profootball = os.getenv("URL_PROFOOTBALLREFERENCE")
+    stats_team_url = f"{url_profootball}/teams/{team_key}/2024.htm"
     stats_content = get_content(stats_team_url)
 
     games = get_games(stats_content)
     info = get_info(stats_content)
 
-    transactions_url = f"https://www.footballdb.com/teams/nfl/{team}/transactions"
+    url_footballdb = os.getenv("URL_FOOTBALLDB")
+    transactions_url = f"{url_footballdb}/teams/nfl/{team}/transactions"
     transactions_content = get_content(transactions_url)
     transactions = get_transactions(transactions_content)
 

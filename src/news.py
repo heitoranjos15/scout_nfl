@@ -1,8 +1,15 @@
+import os
+import logging
+from dotenv import load_dotenv
 from src.utils import get_content
 
 
 def run() -> list:
-    url = "https://www.nfl.com/news/"
+    scope = "nfl_news"
+    FORMAT = f'%(asctime)-15s [{scope}] %(message)s'
+    logging.basicConfig(format=FORMAT, level=logging.INFO)
+    load_dotenv()
+    url = os.getenv("URL_NEWS")
     soup = get_content(url)
     contents = list()
 
